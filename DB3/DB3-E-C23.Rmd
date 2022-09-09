@@ -1,0 +1,167 @@
+---
+title: "DB3 - E:C23"
+author: "Avery Davidowitz"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## C23
+Find the eigenvalues, eigenspaces, algebraic and geometric multiplicities for:
+
+\[A =
+\left[
+\begin{array}{cc}
+1 & 1\\
+1 & 1
+\end{array}
+\right]
+\]
+
+To solve for the eigenvalues we solve:
+$det(\lambda I - A) = 0$
+
+\[det(\left[
+\begin{array}{cc}
+\lambda & 0\\
+0 & \lambda
+\end{array}
+\right]
+-
+\left[
+\begin{array}{cc}
+1 & 1\\
+1 & 1
+\end{array}
+\right]
+)\ = 0
+\]
+
+\[det(
+\left[
+\begin{array}{cc}
+\lambda -1 & -1\\
+-1 & \lambda -1
+\end{array}
+\right]
+)\ = 0
+\]
+
+$(\lambda -1)^2 -1 = 0.$
+Simplified we have:
+$\lambda(\lambda - 2) = 0 \rightarrow \lambda = 0,\;2$ with algebraic multiplicities of 1.
+
+For $\lambda = 0$:
+\[(\left[
+\begin{array}{cc}
+0 & 0\\
+0 & 0
+\end{array}
+\right]
+-
+\left[
+\begin{array}{cc}
+1 & 1\\
+1 & 1
+\end{array}
+\right]
+)\ \vec{x} = \vec{0}
+\]
+
+\[
+\left[
+\begin{array}{cc}
+-1 & -1\\
+-1 & -1
+\end{array}
+\right]
+\vec{x} = \vec{0}
+\]
+The RREF of this matrix results from performing R2 = R2 - R1 and R1 = R1 * -1
+\[
+\left[
+\begin{array}{cc}
+1 & 1\\
+0 & 0
+\end{array}
+\right]
+\vec{x} = \vec{0}
+\]
+Multiplying these matrices $\rightarrow x_{1} + x_{2} = 0 \rightarrow x_{1} = -x_{2}$
+Setting $x_{2} = s$ yields the eigenspace for $\lambda = 0$:
+\[ E_{0} = \mbox{Span}
+\left(
+s\times
+\left[
+\begin{array}{c}
+1\\
+-1
+\end{array}
+\right]
+\forall s \in \mathbf{R}
+\right)
+\]
+
+For $\lambda = 2$:
+\[(\left[
+\begin{array}{cc}
+2 & 0\\
+0 & 2
+\end{array}
+\right]
+-
+\left[
+\begin{array}{cc}
+1 & 1\\
+1 & 1
+\end{array}
+\right]
+)\ \vec{x} = \vec{0}
+\]
+
+\[
+\left[
+\begin{array}{cc}
+1 & -1\\
+-1 & 1
+\end{array}
+\right]
+\vec{x} = \vec{0}
+\]
+The RREF of this matrix results from performing R2 = R2 + R1
+\[
+\left[
+\begin{array}{cc}
+1 & -1\\
+0 & 0
+\end{array}
+\right]
+\vec{x} = \vec{0}
+\]
+Multiplying these matrices $\rightarrow x_{1} - x_{2} = 0 \rightarrow x_{1} = x_{2}$
+Setting $x_{2} = s$ yields the eigenspace for $\lambda = 2$:
+\[ E_{2} = \mbox{Span}
+\left(
+s\times
+\left[
+\begin{array}{c}
+1\\
+1
+\end{array}
+\right]
+\forall s \in \mathbf{R}
+\right)
+\]
+
+The geometric multiplicity is equal to the dim of both $E_{0}$ and $E_{2} = 1$
+
+Confirming the values in R
+```{r}
+A = matrix(c(1,1,1,1),2)
+ev = eigen(A)
+print(ev$values)
+print(ev$vectors)
+
+```
+
