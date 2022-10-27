@@ -1,0 +1,61 @@
+---
+title: "DATA 605 - HW 10"
+author: "Avery Davidowitz"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Import Libraries
+```{r}
+library(markovchain)
+```
+
+# Create Markov chains
+The states of the chain represent how much money Smith currently has. The transition matrix represents the probabilities of the bets at a given state. States 0 and 8 are absorbing states with a P00 and P88 equal to 1. 
+```{r}
+#timid strat Markov chain object
+statesNames_timid <- c("0","1","2","3","4","5","6","7","8")
+mc_timid <- new("markovchain", transitionMatrix=matrix(c(1,0,0,0,0,0,0,0,0,
+                                                         .6,0,.4,0,0,0,0,0,0,
+                                                         0,.6,0,.4,0,0,0,0,0,
+                                                         0,0,.6,0,.4,0,0,0,0,
+                                                         0,0,0,.6,0,.4,0,0,0,
+                                                         0,0,0,0,.6,0,.4,0,0,
+                                                         0,0,0,0,0,.6,0,.4,0,
+                                                         0,0,0,0,0,0,.6,0,.4,
+                                                         0,0,0,0,0,0,0,0,1),byrow=TRUE,
+nrow=9, dimnames=list(statesNames_timid,statesNames_timid)))
+#bold strat Markov chain object
+statesNames_bold <- c("0","1","2","4","8")
+mc_bold <- new("markovchain", transitionMatrix=matrix(c(1,0,0,0,0,
+                                                        .6,0,.4,0,0,
+                                                        .6,0,0,.4,0,
+                                                        .6,0,0,0,.4,
+                                                         0,0,0,0,1),byrow=TRUE,
+nrow=5, dimnames=list(statesNames_bold,statesNames_bold)))
+```
+## Absorbtion Probabilities
+The absorption probabilities of the Markov chain ending in either state 0 or 8 represent the probability that the Smith will lose and stay in prison or win and escape.
+```{r}
+ap_timid <- absorptionProbabilities(mc_timid)
+ap_bold <- absorptionProbabilities(mc_bold)
+ap_timid
+ap_bold
+```
+## Conclusion
+As seen below if the prisoner Smith starts at 1 dollar and gambles using the bold strategy they are more likely to escape.
+```{r}
+# Question A)
+ap_timid["1","8"]
+# Question B)
+ap_bold["1","8"]
+# Question C)
+ap_bold["1","8"] > ap_timid["1","8"]
+```
+
+
