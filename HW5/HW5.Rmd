@@ -1,0 +1,134 @@
+---
+title: "DATA605 HW 5"
+author: "Avery Davidowitz"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## Question 1 - Bayesian
+```{r}
+#part A
+sens <- .96
+spec <- .98
+prev <- .001
+
+bayesian <- (sens * prev)/((sens * prev) + (1 - spec) * (1 - prev))
+print(bayesian)
+#Part B - cost
+(100000 * 1000)+(100000 * bayesian) 
+```
+
+
+## Question 2 - Binomial
+```{r}
+prob <- .05
+num_months <- 24
+```
+What is the probability that, after 24 months, you received exactly 2 inspections?
+```{r}
+dbinom(2, num_months, prob)
+```
+
+What is the probability that, after 24 months, you received 2 or more inspections?
+```{r}
+1 - (dbinom(1, num_months, prob)) - (dbinom(0, num_months, prob))
+```
+
+What is the probability that your received fewer than 2 inspections?
+```{r}
+1 - (1-(dbinom(1, num_months, prob)) - (dbinom(0, num_months, prob)))
+```
+
+What is the expected number of inspections you should have received? What is the standard deviation?
+```{r}
+#EV
+prob * num_months
+#SD
+(prob * num_months * (1-prob))^(1/2)
+```
+
+## Question 3 - Poisson
+```{r}
+rate <- 10 #per hour
+```
+What is the probability that exactly 3 arrive in one hour?
+```{r}
+dpois(3, rate)
+```
+
+What is the probability that more than 10 arrive in one hour?
+```{r}
+1 - ppois(10, rate)
+```
+How many would you expect to arrive in 8 hours?
+```{r}
+#EV per 8 hours
+8*rate
+```
+What is the standard deviation of the appropriate probability distribution?
+Square root(10)
+
+If there are three family practice providers that can see 24 templated patients each day, what is the percent utilization and what are your recommendations?
+```{r}
+(8 * rate) / (24 * 3)
+```
+## Question 4 - Hypergeometric
+If your subordinate acted innocently, what was the probability he/she would have selected five nurses for the trips?
+```{r}
+dhyper(5,15,15,6)
+```
+
+How many nurses would we have expected your subordinate to send?
+6 * (15/30)
+How many non-nurses would we have expected your subordinate to send?
+6 * (15/30)
+## Question 5 - Geometric
+```{r}
+prob <- .001 #per hour
+hours <- 1200 #per year
+```
+What is the probability that the driver will be seriously injured during the course of the year?
+```{r}
+pgeom(hours, prob)
+```
+
+In the course of 15 months?
+
+```{r}
+pgeom(hours*15/12, prob)
+```
+What is the expected number of hours that a driver will drive before being seriously injured?
+```{r}
+#EV = 1-p/p
+(1-prob) / prob
+```
+
+Given that a driver has driven 1200 hours, what is the probability that he or she will be injured in the
+next 100 hours?
+```{r}
+
+```
+
+
+## Question 6
+What is the probability that the generator will fail more than twice in 1000 hours?
+```{r}
+1 - ppois(2,1)
+```
+
+What is the expected value? 1000 hours
+
+## Question 7
+What is the probability that this patient will wait more than 10 minutes?
+```{r}
+1-punif(10,0,30)
+```
+EV = .5*(0+30)
+
+## Question 8
+What is the expected failure time? 
+EV = 10
+
+

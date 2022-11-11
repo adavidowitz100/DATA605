@@ -1,0 +1,48 @@
+---
+title: "Data 605 - HW11"
+author: "Avery Davidowitz"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Import Packages
+```{r}
+library(tidyverse)
+```
+
+
+## Examine Data Set
+```{r}
+head(mtcars)
+summary(mtcars)
+mpg_wt <- dplyr::select(mtcars, mpg, wt)
+```
+## Visualize the Data Set
+```{r}
+ggplot(mpg_wt, aes(x= wt, y= mpg)) +
+  geom_point()
+```
+
+## Model
+```{r}
+mpg_wt_lm <- lm(mpg ~ wt, data = mpg_wt)
+summary(mpg_wt_lm)
+```
+
+## Visualize Model Fit
+```{r}
+ggplot(mpg_wt, aes(x= wt, y= mpg)) +
+  geom_point() + geom_abline(intercept = mpg_wt_lm$coefficients[1], slope= mpg_wt_lm$coefficients[2])
+```
+```{r}
+res <- as_data_frame(mpg_wt_lm$residuals)
+ggplot(res, aes(sample = value)) +
+  stat_qq() +
+  stat_qq_line()
+```
+## Conclusion
+The distribution of the residuals of the SLR model appear to be nearly normal in both the summary statistics and a quantile-quantile plot. The R squared value of .75 shows that much of the variability in a cars mpg is caused by variance in weight.

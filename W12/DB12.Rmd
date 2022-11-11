@@ -1,0 +1,132 @@
+---
+title: "Data 605 - DB12"
+author: "Avery Davidowitz"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Introduction
+mtcars is a built in dataset consisting of:
+A data frame with 32 observations on 11 (numeric) variables.
+
+[, 1]	mpg	Miles/(US) gallon
+[, 2]	cyl	Number of cylinders
+[, 3]	disp	Displacement (cu.in.)
+[, 4]	hp	Gross horsepower
+[, 5]	drat	Rear axle ratio
+[, 6]	wt	Weight (1000 lbs)
+[, 7]	qsec	1/4 mile time
+[, 8]	vs	Engine (0 = V-shaped, 1 = straight)
+[, 9]	am	Transmission (0 = automatic, 1 = manual)
+[,10]	gear	Number of forward gears
+[,11]	carb	Number of carburetors
+
+I will attempt to build a multiple linear regression model to predict an unknown car's miles per gallon.
+
+## Load Data
+
+```{r}
+data(mtcars)
+car_df <- mtcars 
+head(car_df)
+set.seed(1237)
+```
+
+## Visualize Data Relationships
+
+```{r}
+pairs(mtcars, gap=.5)
+```
+
+## Divide Dataset into Train and Test Goups
+
+```{r}
+rows <- nrow(car_df)
+f <- .5
+upper_bound <- floor(f * rows)
+permuted_car_df <- car_df[sample(rows), ]
+train <- permuted_car_df[1:upper_bound, ]
+test <- permuted_car_df[(upper_bound+1):rows, ]
+```
+
+## Backward Elimination of Variables
+```{r}
+car_lm_full <- lm(mpg ~ cyl + disp + hp + drat + wt + qsec + vs + am + gear + carb, data=train)
+summary(car_lm_full)
+```
+
+The engine shape represented by the dichotomous categorical variable vs 0 = V shaped and 1 = straight has the highest p value. I remove eliminate that variable and rerun the regression.
+```{r}
+car_lm2 <- update(car_lm_full, .~. - vs, data =
+train)
+summary(car_lm2)
+```
+
+This process is repeated until there are no variables with a p value over .05
+
+```{r}
+car_lm3 <- update(car_lm_full, .~. - vs - qsec, data =
+train)
+summary(car_lm3)
+```
+
+```{r}
+car_lm4 <- update(car_lm_full, .~. - vs - qsec - am, data =
+train)
+summary(car_lm4)
+```
+
+```{r}
+car_lm5 <- update(car_lm_full, .~. - vs - qsec - am - drat, data =
+train)
+summary(car_lm5)
+```
+
+```{r}
+car_lm6 <- update(car_lm_full, .~. - vs - qsec - am - drat - hp, data =
+train)
+summary(car_lm6)
+```
+
+```{r}
+car_lm7 <- update(car_lm_full, .~. - vs - qsec - am - drat - hp - cyl, data =
+train)
+summary(car_lm7)
+```
+
+```{r}
+car_lm8 <- update(car_lm_full, .~. - vs - qsec - am - drat - hp - cyl - disp, data =
+train)
+summary(car_lm8)
+```
+
+```{r}
+car_lm9 <- update(car_lm_full, .~. - vs - qsec - am - drat - hp - cyl - disp - wt, data =
+train)
+summary(car_lm9)
+```
+
+## Residual Analysis
+Our residuals are clustered around 0 and have a nearly normal distribution. This would indicate that our model is appropriate.
+
+```{r}
+par(mfrow=c(2,2))
+plot(car_lm9)
+```
+
+## Model Testing
+Since our t test is relatively tight interval that includes 0, the model is reasonably good at predicting the mpg of the test group based on the training data. Similarly, the deltas are clustered around 0 ignoring a few outliers.
+
+```{r}
+predicted <- predict(car_lm9, newdata=test)
+delta <- predicted - test$mpg
+t.test(delta, conf.level = .95)
+plot(delta)
+```
+
+
+

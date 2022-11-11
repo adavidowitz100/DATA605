@@ -1,0 +1,72 @@
+---
+title: "Data607 HW7"
+author: "Avery Davidowitz"
+date: '`r Sys.Date()`'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+1. Let X1, X2, . . . , Xn be n mutually independent random variables, each of
+which is uniformly distributed on the integers from 1 to k. Let Y denote the
+minimum of the Xi’s. Find the distribution of Y 
+
+## Question 2
+2. Your organization owns a copier (future lawyers, etc.) or MRI (future doctors).
+This machine has a manufacturer’s expected lifetime of 10 years. This means
+that we expect one failure every ten years. (Include the probability statements
+and R Code for each part.)
+
+a. What is the probability that the machine will fail after 8 years?. Provide also the
+expected value and standard deviation. Model as a geometric. (Hint: the probability is
+equivalent to not failing during the first 8 years..
+```{r}
+p <- 1/10
+ev <- 1/p
+s_d <- sqrt((1 - p)/(p ^ 2))
+p_8 <- ((1-p)^(8-1))*p
+p
+ev
+s_d
+p_8
+```
+
+b. What is the probability that the machine will fail after 8 years?. Provide also the
+expected value and standard deviation. Model as an exponential
+```{r}
+lam <-1/10
+ev <- 1/lam
+s_d <- sqrt(1/lam^2)
+pexp(8, lam, lower.tail = FALSE)
+ev
+s_d
+```
+
+c. What is the probability that the machine will fail after 8 years?. Provide also the
+expected value and standard deviation. Model as a binomial. (Hint: 0 success in 8
+years
+```{r}
+p <- 1/10
+ev <- 8*p
+s_d <- sqrt(8 * p * (1-p))
+pbinom(0, 8, p, lower.tail = TRUE)
+ev
+s_d
+```
+
+d. What is the probability that the machine will fail after 8 years?. Provide also the
+expected value and standard deviation. Model as a Poisson
+```{r}
+ev <- 1/10
+s_d <- sqrt(ev)
+pois_1 <- ppois(0, ev, lower.tail = TRUE)
+pois_1^8
+ev
+s_d
+```
+

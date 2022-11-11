@@ -1,0 +1,104 @@
+---
+title: "HW 6"
+author: "Avery Davidowitz"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## Question 1
+A bag contains 5 green and 7 red jellybeans. How many ways can 5 jellybeans be
+withdrawn from the bag so that the number of green ones withdrawn will be less than
+2?
+```{r}
+red5 <- choose(7,5) * choose(5,0)
+red4 <- choose(7,4) * choose(5,1)
+print(red5 + red4)
+```
+
+## Question 2
+A certain congressional committee consists of 14 senators and 13 representatives. How
+many ways can a subcommittee of 5 be formed if at least 4 of the members must be
+representatives?
+
+```{r}
+rep5 <- choose(13,5) * choose(14,0)
+rep4 <- choose(13,4) * choose(14,1)
+print(rep5 + rep4)
+```
+
+## Question 3
+If a coin is tossed 5 times, and then a standard six-sided die is rolled 2 times, and finally
+a group of three cards are drawn from a standard deck of 52 cards without
+replacement, how many different outcomes are possible?
+
+```{r}
+coin <- 2 ** 5
+die <- 6 ** 2
+card <- choose(52,3)
+print(coin * die * card)
+```
+
+## Question 4
+3 cards are drawn from a standard deck without replacement. What is the probability
+that at least one of the cards drawn is a 3? Express your answer as a fraction or a
+decimal number rounded to four decimal places.
+
+```{r}
+# P(at least 1 3 drawn) = 1 - P(0 3s are drawn)
+p_atleast1_3 = 1 - (48/52 * 47/51 * 46/50)
+round(p_atleast1_3, 4)
+```
+## Question 5 
+Lorenzo is picking out some movies to rent, and he is primarily interested in
+documentaries and mysteries. He has narrowed down his selections to 17
+documentaries and 14 mysteries.
+
+How many different combinations of 5 movies can he rent?
+```{r}
+choose(31,5)
+```
+## Question 6
+In choosing what music to play at a charity fund raising event, Cory needs to have an
+equal number of symphonies from Brahms, Haydn, and Mendelssohn. If he is setting up
+a schedule of the 9 symphonies to be played, and he has 4 Brahms, 104 Haydn, and 17
+Mendelssohn symphonies from which to choose, how many different schedules are
+possible? Express your answer in scientific notation rounding to the hundredths place
+
+```{r}
+factorial(9) * (choose(4,3) * choose(104,3)) * choose(17,3)
+```
+
+## Question 7
+An English teacher needs to pick 13 books to put on his reading list for the next school
+year, and he needs to plan the order in which they should be read. He has narrowed
+down his choices to 6 novels, 6 plays, 7 poetry books, and 5 nonfiction books.
+If he wants to include no more than 4 nonfiction books, how many different
+reading schedules are possible? Express your answer in scientific notation rounding to
+the hundredths place.
+```{r}
+#?
+```
+
+## Question 8
+Zane is planting trees along his driveway, and he has 5 sycamores and 5 cypress trees to
+plant in one row. What is the probability that he randomly plants the trees so that all 5
+sycamores are next to each other and all 5 cypress trees are next to each other?
+Express your answer as a fraction or a decimal number rounded to four decimal places
+```{r}
+round((2/choose(10,5)),4)
+```
+## Question 9
+If you draw a queen or lower from a standard deck of cards, I will pay you $4. If not, you
+pay me $16. (Aces are considered the highest card in the deck.) Find the expected value of the proposition. Round your answer to two decimal
+places. Losses must be expressed as negative values. If you played this game 833 times how much would you expect to win or lose?
+Round your answer to two decimal places. Losses must be expressed as negative
+values.
+
+```{r}
+ev <- (4 * 44/52) - (16 * 8/52)
+print(ev)
+print(833 * ev)
+```
+

@@ -1,0 +1,53 @@
+---
+title: "Data 605 - W12 HW"
+author: "Avery Davidowitz"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Libraries
+
+```{r}
+library(tidyverse)
+```
+
+## Data
+
+```{r}
+df <- readr::read_csv(paste0(getwd(),"/who.csv"))
+head(df)
+```
+
+## 1 
+Provide a scatterplot of LifeExp~TotExp, and run simple linear regression. Do not transform the
+variables. Provide and interpret the F statistics, R^2, standard error,and p-values only. Discuss
+whether the assumptions of simple linear regression met.
+
+```{r}
+ggplot(data=df, aes(x=TotExp, y=LifeExp)) + geom_point()
+```
+
+```{r}
+life_exp_lm <- lm(LifeExp ~ TotExp, data = df)
+summary(life_exp_lm)
+```
+
+The R squared value of .25 is very low and indicates that the model does not explain the dependent variable well.
+
+## 2
+Raise life expectancy to the 4.6 power (i.e., LifeExp^4.6). Raise total expenditures to the 0.06
+power (nearly a log transform, TotExp^.06). Plot LifeExp^4.6 as a function of TotExp^.06, and r
+re-run the simple regression model using the transformed variables. Provide and interpret the F
+statistics, R^2, standard error, and p-values. Which model is "better?"
+
+```{r}
+df2 <- df |> dplyr::mutate(LifeExp = LifeExp^4.6) |> dplyr::mutate(TotExp = TotExp^.06)
+life_exp_lm2 <- lm(LifeExp ~ TotExp, data = df2)
+summary(life_exp_lm2)
+```
+
+
