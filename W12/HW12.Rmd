@@ -34,9 +34,16 @@ ggplot(data=df, aes(x=TotExp, y=LifeExp)) + geom_point()
 ```{r}
 life_exp_lm <- lm(LifeExp ~ TotExp, data = df)
 summary(life_exp_lm)
+ggplot(data = life_exp_lm, aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  xlab("Fitted values") +
+  ylab("Residuals")
+ggplot(data = life_exp_lm, aes(sample = .resid)) +
+  stat_qq()
 ```
 
-The R squared value of .25 is very low and indicates that the model does not explain the dependent variable well.
+The R squared value of .25 is very low and indicates that the model does not explain the dependent variable well. From the residuals plots we can see that we are violating assumptions for linear models regarding the normal distribution of residuals and constant variability. 
 
 ## 2
 Raise life expectancy to the 4.6 power (i.e., LifeExp^4.6). Raise total expenditures to the 0.06
@@ -48,6 +55,54 @@ statistics, R^2, standard error, and p-values. Which model is "better?"
 df2 <- df |> dplyr::mutate(LifeExp = LifeExp^4.6) |> dplyr::mutate(TotExp = TotExp^.06)
 life_exp_lm2 <- lm(LifeExp ~ TotExp, data = df2)
 summary(life_exp_lm2)
+ggplot(data = life_exp_lm2, aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  xlab("Fitted values") +
+  ylab("Residuals")
+ggplot(data = life_exp_lm2, aes(sample = .resid)) +
+  stat_qq()
 ```
 
+The assumptions are much more closely met after transformation with both the normality and constant variance were satisfied unlike before. The power scaled model also performs significantly better across all metrics. The R squared explains an additional 50% of the variance in the dependent variable. The p-value representing the probability that the relationship between variables was due to chance also decreased by a factor of 10. The ration of residual standard error/mean estimate(Intercept) also decreased by 2% so while the error of 90490000 in the power model looks enormous it is a strict improvement. 
 
+## 3
+Forecast life expectancy when TotExp^.06 =1.5. Then forecast life
+expectancy when TotExp^.06=2.5.
+
+```{r}
+new <- data.frame(TotExp = c(1.5,2.5))
+predict.lm(life_exp_lm2, new)
+```
+
+## 4
+
+Build the following multiple regression model and interpret the F Statistics, R^2, standard error,
+and p-values. How good is the model?
+LifeExp = b0+b1 x PropMd + b2 x TotExp +b3 x PropMD x TotExp
+
+```{r}
+df3 <- df |> dplyr::mutate(MDExp = PropMD * TotExp)
+life_exp_lm3 <- lm(LifeExp ~ PropMD + TotExp + MDExp, data = df3)
+summary(life_exp_lm3)
+ggplot(data = life_exp_lm3, aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  xlab("Fitted values") +
+  ylab("Residuals")
+ggplot(data = life_exp_lm3, aes(sample = .resid)) +
+  stat_qq()
+```
+This model has a very poor performance with an adjusted R squared showing that it only explains 34% of the variance in the dependent variable. The model is "accurate" in that the standard error and p-values are low. However, it still isn't very useful. It seems to still violate assumptions for linear models for normal distribution of residuals and constant variability.
+
+## 5
+
+Forecast LifeExp when PropMD=.03 and TotExp = 14. Does this forecast seem realistic? Why
+or why not?
+
+```{r}
+new <- data.frame(TotExp = 14,PropMD = .03, MDExp = 14*.03)
+predict.lm(life_exp_lm3, new)
+```
+
+This prediction doesn't seem remotely accurate because that life expectancy value is 20 over the max from the data set.

@@ -1,0 +1,39 @@
+---
+title: "DB 13 response"
+author: "Avery Davidowitz"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Code from https://math.stackexchange.com/questions/925838/constructing-a-while-loop-in-r-for-newtons-method
+
+## Newton's Method 4.1 - 13
+```{r}
+g <- function(x) {
+    x^2 - cos(x)
+    }
+
+gPrime <- function(x) {
+    2*x + sin(x)
+    }
+
+guess <- 1.4
+
+tolerance <- .001
+
+root <- function(g, gPrime, guess, tolerance) {
+    x = guess
+    while (abs(g(x)) > tolerance) {
+        x = x - g(x)/gPrime(x)
+        }
+    x
+    }
+
+root(g, gPrime, guess, tolerance)
+```
+

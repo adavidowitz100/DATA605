@@ -1,0 +1,68 @@
+---
+title: "Data 605 - DB13"
+author: "Avery Davidowitz"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import Libraries
+```{r}
+library(pracma)
+```
+
+
+## 4.3 Question 8
+
+A rancher has 1000 feet of fending in which to construct adjacent, equally sized recatngular pens. What dimensions should these pens have to maximize the enclosed area?
+
+Our fencing contraint yields:
+3l + 2w = 1000
+
+The cost function to optimize is:
+area = l * w
+
+Using substitution:
+area = l * (1000 - 3l)/2
+
+Calculate the derivative:
+```{r}
+area = expression(-3/2 * l^2 + 500*l)
+deriv <- D(area, "l")
+deriv
+```
+Using bisection to find the root for where deriv = 0
+
+```{r}
+root <- bisect(function(l) -3/2 * (2 * l) + 500, 0, 1000)
+root
+```
+
+The optimal length is equal to:
+```{r}
+l <- root$root
+l
+```
+
+The resulting maximized area is:
+
+```{r}
+fence_area <- function(l) {
+  -3/2 * l^2 + 500*l
+}
+fence_area(l)
+```
+
+The optimal width is equal to:
+```{r}
+w <- fence_area(l)/l
+w
+```
+
+
+
